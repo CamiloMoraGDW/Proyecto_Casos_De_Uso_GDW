@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <div className="w-full">
-        <h1 className="font-bold text-center">Hola Mundo</h1>
+        <h1 className="font-bold text-center">Sitio en desarrollo, sera desplegado proximamente...</h1>
       </div>
     </>
   )
