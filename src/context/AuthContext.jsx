@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import firebaseApp from '../../credenciales_firebase';
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -12,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (usuarioFirebase) => {
             if (usuarioFirebase) {
-                const docRef = doc(firestore, 'CDU_users', usuarioFirebase.uid);
+                const docRef = doc(firestore, 'CDUusers', usuarioFirebase.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     setUsuarioGlobal({ ...usuarioFirebase, role: docSnap.data().role });
