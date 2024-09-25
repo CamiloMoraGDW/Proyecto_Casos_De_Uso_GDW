@@ -14,6 +14,7 @@ import Home from './pages/home';
 
 
 
+
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
@@ -23,6 +24,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     const unsubscribe = onAuthStateChanged(auth, async (usuarioFirebase) => {
       if (usuarioFirebase) {
         setUsuarioGlobal(usuarioFirebase);
@@ -41,6 +43,7 @@ function App() {
     });
 
     return () => unsubscribe();
+    AOS.refresh()
   }, []);
 
   if (loading) {
@@ -52,6 +55,7 @@ function App() {
 
       {usuarioGlobal ? (
         <>
+          <div className="animate-blurred-fade-in"></div>
           <div className="app-container">
             <Header />
             <div className="main-content">
@@ -77,6 +81,7 @@ function App() {
           <Route path="*" element={<Login />} />
         </Routes>
       )}
+
     </>
   );
 }
