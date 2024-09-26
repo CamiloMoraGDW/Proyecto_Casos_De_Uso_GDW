@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import LogoNegro from "../assets/LogoGdwBlanco.png"
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
 import firebaseApp from "../../credenciales_firebase";
 import {
     getAuth,
@@ -10,19 +9,11 @@ import {
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
+
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 function Login() {
-    useEffect(() => {
-        AOS.init({
-            duration: 500, // duración de la animación en milisegundos
-            easing: "ease-in-out", // tipo de easing de la animación
-            once: false, // si la animación debería ocurrir solo una vez
-        });
-    }, []);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -97,9 +88,9 @@ function Login() {
 
     return (
         <>
-            <div className="flex min-h-screen">
+            <div className="flex min-h-screen animate-blurred-fade-in duration-100">
                 {/* Columna izquierda */}
-                <div className="hidden w-1/2 flex-col justify-center bg-black p-12 lg:flex lg:items-center">
+                <div className="hidden w-1/2 flex-col justify-center bg-gdwNegro p-12 lg:flex lg:items-center">
                     <div className="mb-8 w-full flex justify-start">
                         <img
                             src={LogoNegro}

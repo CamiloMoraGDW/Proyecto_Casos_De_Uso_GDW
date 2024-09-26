@@ -1,19 +1,19 @@
+// Importaciones
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import Login from './pages/login';
-import Header from './components/header';
+
+// Componentes
 import PrivateRoute from './PrivatesRoutes';
-import Loading from './components/loading_circle'; // Importa el componente de animación
 import firebaseApp from '../credenciales_firebase';
+import Loading from './components/loading_circle'; // Importa el componente de animación
+import Header from './components/header';
 import List from './pages/list';
+import Login from './pages/login';
 import Upload from './pages/upload';
 import Profile from './pages/profile';
 import Home from './pages/home';
-
-
-
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
@@ -24,6 +24,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
 
     const unsubscribe = onAuthStateChanged(auth, async (usuarioFirebase) => {
       if (usuarioFirebase) {
@@ -43,8 +44,8 @@ function App() {
     });
 
     return () => unsubscribe();
-    AOS.refresh()
   }, []);
+
 
   if (loading) {
     return <Loading />; // Muestra una animación de carga mientras se cargan los datos
@@ -52,13 +53,11 @@ function App() {
 
   return (
     <>
-
       {usuarioGlobal ? (
         <>
-          <div className="animate-blurred-fade-in"></div>
-          <div className="app-container">
+          <div className="app-container animate-blurred-fade-in duration-100">
             <Header />
-            <div className="main-content">
+            <div className="main-content" data-aos="zoom-in">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/lista-cdus" element={<List />} />
@@ -81,7 +80,6 @@ function App() {
           <Route path="*" element={<Login />} />
         </Routes>
       )}
-
     </>
   );
 }
