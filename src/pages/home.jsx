@@ -1,5 +1,9 @@
 import React from "react"
 import Logo from '../assets/LogoGdwNegro.png'
+import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
+import { FaExchangeAlt } from "react-icons/fa";
+
+
 
 
 function Home() {
@@ -8,7 +12,7 @@ function Home() {
             <div className="min-h-screen bg-slate-200 to-white flex flex-col items-center justify-center p-4 animate-blurred-fade-in duration-100">
                 <div className="max-w-4xl w-full space-y-8">
                     {/* Logo de la empresa */}
-                    <div className="flex justify-center">
+                    <div className="flex justify-center items-center gap-10">
                         <img
                             src={Logo}
                             alt="Logo de la empresa"
@@ -16,6 +20,10 @@ function Home() {
                             height={100}
                             className="mb-8"
                         />
+                        <FaExchangeAlt className="size-[100px]" />
+
+                        <HiOutlineClipboardDocumentList className="size-[200px]" />
+
                     </div>
 
                     {/* Texto contextual */}

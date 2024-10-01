@@ -1,13 +1,16 @@
-
-import { FaRegCircleUser } from "react-icons/fa6";
-import Logo from '../assets/LogoGdwNegro.png'
+//Utils
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
+//Assets
+import { FaRegCircleUser } from "react-icons/fa6";
 import { firestore, auth } from "../../credenciales_firebase";
-
-function Header() {
+import { TiDocumentText } from "react-icons/ti";
+import { HiOutlineDocumentAdd } from "react-icons/hi";
+import Logo from '../assets/LogoGdwNegro.png'
+//////////////////////////////////////////////////////////////////////
+export default function Header() {
     const [profilePicURL, setProfilePicURL] = useState("");
     const [role, setRole] = useState(null);
 
@@ -35,12 +38,30 @@ function Header() {
                 </span>
 
                 <nav className="space-x-4">
-                    <span onClick={() => navigate("/lista-cdus")} className="relative text-gray-600 hover:text-primary transition-colors duration-300 hover-underline-animation">
-                        Productos
+                    <span
+                        onClick={() => navigate("/lista-cdus")}
+                        className="group relative inline-block text-sm font-medium transition-all hover:text-primary hover:cursor-pointer"
+                    >
+                        <span className="flex justify-center items-center text-gray-600 text-base p-1 gap-1">
+                            Listado CDU
+                            <TiDocumentText />
+                        </span>
+                        <span className="absolute bottom-0 left-0 h-[3px] w-full scale-x-0 bg-gray-600 rounded-full transition-all group-hover:scale-x-100" />
                     </span>
-                    <span onClick={() => navigate("/agregar-cdu")} className="relative text-gray-600 hover:text-primary transition-colors duration-300 hover-underline-animation">
-                        Servicios
-                    </span>
+
+                    {role === "admin" && (
+                        <span
+                            onClick={() => navigate("/nuevo-cdu")}
+                            className="group relative inline-block text-sm font-medium transition-all hover:text-primary hover:cursor-pointer"
+                        >
+                            <span className="flex justify-center items-center text-gray-600 text-base p-1 gap-1">
+                                Agregar CDU
+                                <HiOutlineDocumentAdd />
+                            </span>
+                            <span className="absolute bottom-0 left-0 h-[3px] w-full scale-x-0 bg-gray-600 rounded-full transition-all group-hover:scale-x-100" />
+                        </span>
+                    )}
+
                 </nav>
 
                 <div className="flex items-center space-x-4">
@@ -56,6 +77,4 @@ function Header() {
             </header>
         </>
     )
-}
-
-export default Header
+};

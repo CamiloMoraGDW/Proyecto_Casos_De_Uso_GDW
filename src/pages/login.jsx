@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react"
+//Utils
+import React, { useState } from "react"
 import LogoNegro from "../assets/LogoGdwBlanco.png"
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import firebaseApp from "../../credenciales_firebase";
 import {
     getAuth,
     signInWithEmailAndPassword,
 } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
-
+//Assets
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import firebaseApp from "../../credenciales_firebase";
+//Declaracion de Autenticacion y Firestore (Base de Datos)
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
-function Login() {
-
+export default function Login() {
+    //Estados
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -82,16 +83,12 @@ function Login() {
 
     const navigate = useNavigate();
 
-
-
-
-
     return (
         <>
             <div className="flex min-h-screen animate-blurred-fade-in duration-100">
                 {/* Columna izquierda */}
-                <div className="hidden w-1/2 flex-col justify-center bg-gdwNegro p-12 lg:flex lg:items-center">
-                    <div className="mb-8 w-full flex justify-start">
+                <div className="hidden w-1/2 flex-col items-center justify-center bg-gdwNegro p-12 lg:flex lg:items-center">
+                    <div className="mb-8 w-full flex justify-center" >
                         <img
                             src={LogoNegro}
                             alt="Logo de la empresa"
@@ -99,27 +96,27 @@ function Login() {
                             height={75}
                         />
                     </div>
-                    <h1 className="w-full mb-4 text-4xl font-bold text-white">Bienvenid@ al Protal de Casos de Uso</h1>
-                    <p className="text-lg text-white">
+                    <h1 className="w-full mb-4 text-4xl font-bold text-white text-center">Bienvenid@ al Protal de Casos de Uso</h1>
+                    <p className="text-lg text-white text-center">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ducimus, maxime ab, blanditiis soluta saepe at sunt esse eius placeat, incidunt consequatur mollitia et quasi sed ea fugit optio nobis?
                     </p>
                 </div>
 
                 {/* Columna derecha */}
                 <div className="flex w-full items-center justify-center lg:w-1/2">
-                    <div className="w-full max-w-md space-y-8 p-8">
-                        <div className="text-start mb-0">
-                            <h2 className="text-[28px] font-bold text-gray-900">Inicia sesión en tu cuenta</h2>
+                    <div className="w-full max-w-md p-8">
+                        <div className="text-start">
+                            <h2 className="text-[28px] font-bold text-gray-900">Inicia sesión con tu cuenta</h2>
                         </div>
-                        <div className="w-full flex justify-center mx-0">
-                            <div className="h-1 w-1/3 bg-black rounded-full"></div>
+                        <div className="w-full flex justify-center py-3">
+                            <div className=" h-1 w-1/3 bg-black rounded-full"></div>
                         </div>
-                        <form className="mt-4 space-y-6" onSubmit={submitHandler}>
-                            <div className="space-y-4">
-                                <div className="flex flex-col justify-center a">
-                                    <label htmlFor="email">Correo electrónico</label>
+                        <form className="" onSubmit={submitHandler}>
+                            <div className="">
+                                <label className="pl-1" htmlFor="email">Correo electrónico</label>
+                                <div className="h-10 w-full p-1 flex justify-between items-center border-2 rounded-lg border-gray-400">
                                     <input
-                                        className="h-10 rounded-lg border-2 border-solid border-gray-400 p-1"
+                                        className="outline-none h-full w-full"
                                         id="email"
                                         name="email"
                                         type="email"
@@ -128,10 +125,10 @@ function Login() {
                                         onChange={handleChange}
                                         required />
                                 </div>
-                                <div className="flex flex-col justify-center a">
-                                    <label htmlFor="password">Contraseña</label>
+                                <label className="pl-1" htmlFor="password">Contraseña</label>
+                                <div className="h-10 w-full p-1 flex items-center pl-2 border-2 rounded-lg border-gray-400">
                                     <input
-                                        className="h-10 rounded-lg border-2 border-solid border-gray-400 p-1"
+                                        className="outline-none w-4/5"
                                         id="password"
                                         name="password"
                                         type={shown ? 'text' : 'password'}
@@ -139,25 +136,23 @@ function Login() {
                                         value={password}
                                         onChange={handleChange}
                                         required />
-                                    <div onClick={showPass} className="hover:cursor-pointer mt-2">
+                                    <div onClick={showPass} className="hover:cursor-pointer w-1/5">
                                         {shown ?
                                             <>
-                                                <div className="flex justify-start items-center">
-                                                    <FaEyeSlash className="pr-1 text-3xl" />
-                                                    <h1>Ocultar Contrasena</h1>
+                                                <div className=" h-full flex justify-center items-center">
+                                                    <FaEyeSlash className="text-3xl text-zinc-700 animate-zoom-in animate-duration-250" />
                                                 </div>
-                                                <span className="absolute bottom-0 left-0 h-[3px] w-full scale-x-0 bg-primary transition-all group-hover:scale-x-100" />
                                             </>
                                             :
-                                            <div className="flex justify-start items-center">
-                                                <FaEye className="pr-1 text-3xl" />
-                                                <h1>Mostrar Contrasena</h1>
+                                            <div className="h-full flex justify-center items-center">
+                                                <FaEye className="text-3xl text-zinc-700 animate-zoom-in animate-duration-250" />
+
                                             </div>
                                         }
                                     </div>
                                 </div>
                                 {error && <div className="error-message">{error}</div>}
-                                <div className="w-full flex justify-center">
+                                <div className="w-full flex justify-center mt-5">
                                     <button notype="submit" className="bg-black text-white rounded-lg py-2 px-3 duration-300 hover:px-5 hover:duration-300" onClick={() => navigate("/")}>
                                         Iniciar sesión
                                     </button>
@@ -169,6 +164,4 @@ function Login() {
             </div>
         </>
     )
-}
-
-export default Login
+};

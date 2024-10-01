@@ -62,7 +62,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/lista-cdus" element={<List />} />
                 <Route
-                  path="/agregar-cdu"
+                  path="/nuevo-cdu"
                   element={
                     <PrivateRoute usuarioGlobal={{ ...usuarioGlobal, role }} allowedRoles={['admin']}>
                       <Upload />
