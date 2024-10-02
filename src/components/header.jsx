@@ -43,7 +43,7 @@ export default function Header() {
                         className="group relative inline-block text-sm font-medium transition-all hover:text-primary hover:cursor-pointer"
                     >
                         <span className="flex justify-center items-center text-gray-600 text-base p-1 gap-1">
-                            Listado CDU
+                            Listado Doc's
                             <TiDocumentText />
                         </span>
                         <span className="absolute bottom-0 left-0 h-[3px] w-full scale-x-0 bg-gray-600 rounded-full transition-all group-hover:scale-x-100" />
@@ -55,7 +55,7 @@ export default function Header() {
                             className="group relative inline-block text-sm font-medium transition-all hover:text-primary hover:cursor-pointer"
                         >
                             <span className="flex justify-center items-center text-gray-600 text-base p-1 gap-1">
-                                Agregar CDU
+                                Agregar Doc
                                 <HiOutlineDocumentAdd />
                             </span>
                             <span className="absolute bottom-0 left-0 h-[3px] w-full scale-x-0 bg-gray-600 rounded-full transition-all group-hover:scale-x-100" />

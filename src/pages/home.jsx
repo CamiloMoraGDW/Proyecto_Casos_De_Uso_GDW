@@ -28,9 +28,9 @@ function Home() {
 
                     {/* Texto contextual */}
                     <div className="text-center space-y-4">
-                        <h1 className="text-4xl font-bold text-gray-800">Portal Casos de Uso</h1>
+                        <h1 className="text-4xl font-bold text-gray-800">Portal de Informacion Tecnica y de Uso Cliente</h1>
                         <p className="text-xl text-gray-600">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veritatis esse deserunt dolorum commodi tenetur labore laborum, perferendis neque corrupti. Nam, ex id deleniti aperiam quasi laudantium veritatis. Veritatis, consequuntur quam.
+                            Esta es una solucion destinada a consolidar informacion a cerca del trabajo de cada cliente utilizando la aplicacion de Godoworks. Esta herramienta ayuda a comprender el flujo de trabajo, integraciones, configuraciones y tareas de cada cliente para aumentar la productividad, a su vez se facilita el acceso grandes cantidades de datos, que no tenian un acceso descetralizado.
                         </p>
                     </div>
                 </div>

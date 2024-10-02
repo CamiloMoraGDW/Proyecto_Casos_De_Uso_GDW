@@ -60,9 +60,6 @@ export default function Login() {
         } catch (error) {
             // Manejo de errores y mostrar mensajes de alerta
             switch (error.code) {
-                case "auth/invalid-email":
-                    setError("El correo electrónico no es válido.");
-                    break;
                 case "auth/user-disabled":
                     setError("La cuenta ha sido deshabilitada.");
                     break;
@@ -96,9 +93,9 @@ export default function Login() {
                             height={75}
                         />
                     </div>
-                    <h1 className="w-full mb-4 text-4xl font-bold text-white text-center">Bienvenid@ al Protal de Casos de Uso</h1>
-                    <p className="text-lg text-white text-center">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ducimus, maxime ab, blanditiis soluta saepe at sunt esse eius placeat, incidunt consequatur mollitia et quasi sed ea fugit optio nobis?
+                    <h1 className="w-full mb-4 text-3xl font-bold text-white text-center">Bienvenid@ al Portal de Informacion Tecnica y de Uso Cliente</h1>
+                    <p className="text-base text-white text-center">
+                        Esta es una solucion destinada a consolidar informacion a cerca del trabajo de cada cliente utilizando la aplicacion de Godoworks. Esta herramienta ayuda a comprender el flujo de trabajo, integraciones, configuraciones y tareas de cada cliente para aumentar la productividad, a su vez se facilita el acceso grandes cantidades de datos, que no tenian un acceso descetralizado.
                     </p>
                 </div>
 
@@ -151,7 +148,7 @@ export default function Login() {
                                         }
                                     </div>
                                 </div>
-                                {error && <div className="error-message">{error}</div>}
+                                {error && <div className="text-rose-700">{error}</div>}
                                 <div className="w-full flex justify-center mt-5">
                                     <button notype="submit" className="bg-black text-white rounded-lg py-2 px-3 duration-300 hover:px-5 hover:duration-300" onClick={() => navigate("/")}>
                                         Iniciar sesión
