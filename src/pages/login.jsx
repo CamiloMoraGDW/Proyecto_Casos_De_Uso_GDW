@@ -84,7 +84,7 @@ export default function Login() {
         <>
             <div className="flex min-h-screen animate-blurred-fade-in duration-100">
                 {/* Columna izquierda */}
-                <div className="hidden w-1/2 flex-col items-center justify-center bg-gdwNegro p-12 lg:flex lg:items-center">
+                <div className="w-1/2 max-[700px]:hidden flex-col items-center justify-center bg-gdwNegro p-12 lg:flex lg:items-center">
                     <div className="mb-8 w-full flex justify-center" >
                         <img
                             src={LogoNegro}

@@ -1,122 +1,55 @@
 import React, { useState } from 'react';
-import { db, storage } from '../../credenciales_firebase'; // Ensure Firebase is initialized here
-import { doc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
+import { firestore, storage } from '../../credenciales_firebase'; // Asegúrate de que Firebase esté inicializado aquí
+import { collection, addDoc } from 'firebase/firestore';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 // Components
 import DynamicInputGroup from '../components/inputWadding';
 import Select from '../components/select';
 import CustomFileInput from '../components/selectFile';
 
 function Upload() {
-    const [formData, setFormData] = useState({
-        nombre: '',
-        cliente: '',
-        pais: '',
-        vertical: '',
-        cuentas: '',
-        grupos: '',
-        tareas: [''],
-        flujoTrabajo: [''],
-        condicion: '',
-        configuraciones: [''],
-        integracion: '',
-        archivos1: [],
-        archivos2: [],
-    });
-    const [selectedFiles1, setSelectedFiles1] = useState([]); // For first file input
-    const [selectedFiles2, setSelectedFiles2] = useState([]); // For second file input
+    const [nombre, setNombre] = useState('')
+    const [cliente, setCliente] = useState('')
+    const [pais, setPais] = useState('')
+    const [vertical, setVertical] = useState('')
+    const [cuentas, setCuentas] = useState('')
+    const [grupos, setGrupos] = useState('')
+    const [tareas, seTareas] = useState([''])
+    const [flujoTrabajo, setFlujoTrabajo] = useState('')
+    const [condicion, setCondicion] = useState(false)
+    const [configuraciones, setConfiguraciones] = useState([''])
+    const [desarrollos, setDesarrollos] = useState([''])
+    const [integracion, setIntegracion] = useState('')
+    const [archivoImg, setArchivoImg] = useState(null)
+    const [archivoPdf, setArchivoPdf] = useState(null)
+    const [pdfText, setPdfText] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [id]: value // Actualiza solo el campo modificado
-        }));
-    };
+        switch (id) {
+            case "nombre":
+                setNombre(value);
+                break;
+            case "cliente":
+                setCliente(value);
+                break;
+            case "pais":
+                setPais(value);
+                break;
+            case "vertical":
+                setVertical(value);
+                break;
+            case "cuentas":
+                setCuentas(value);
+                break;
+            case "grupos":
+                setGrupos(value);
+                break;
 
-    const handleSelectChange = (event) => {
-        const { value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            vertical: value
-        }));
-    };
 
-    const handleCondicionChange = (event) => {
-        const { value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            condicion: value,
-            configuraciones: value === 'si' && prevData.configuraciones.length === 0 ? [''] : prevData.configuraciones
-        }));
-    };
-
-    const handleFileChange = (event, inputId) => {
-        const fileArray = Array.from(event.target.files);
-        setFormData((prevData) => ({
-            ...prevData,
-            [inputId]: fileArray.map((file) => file.name)
-        }));
-        if (inputId === 'archivos1') {
-            setSelectedFiles1(fileArray);
-        } else {
-            setSelectedFiles2(fileArray);
         }
-    };
-
-    const verticalOptions = [
-        { value: "option1", label: "Option 1" },
-        { value: "option2", label: "Option 2" },
-        { value: "option3", label: "Option 3" },
-    ];
-
-    const condicionOptions = [
-        { value: "si", label: "SI" },
-        { value: "no", label: "NO" },
-    ];
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            // Save form data to Firestore
-            await setDoc(doc(db, 'documents', formData.nombre), formData);
-
-            // Upload files from the first file input
-            selectedFiles1.forEach(async (file) => {
-                const uniqueName = `${Date.now()}_${file.name}`;
-                const storageRef = ref(storage, `uploads/${uniqueName}`);
-                await uploadBytes(storageRef, file);
-            });
-
-            // Upload files from the second file input
-            selectedFiles2.forEach(async (file) => {
-                const uniqueName = `${Date.now()}_${file.name}`;
-                const storageRef = ref(storage, `uploads/${uniqueName}`);
-                await uploadBytes(storageRef, file);
-            });
-
-            console.log("Formulario enviado y archivos subidos");
-        } catch (error) {
-            console.error("Error al enviar el formulario: ", error);
-        }
-    };
-
-    const InputGroup = ({ id, label, type = "text", placeholder }) => (
-        <div className="space-y-2">
-            <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-                {label}
-            </label>
-            <input
-                id={id}
-                type={type}
-                placeholder={placeholder}
-                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
-                value={formData[id] || ''}
-                onChange={handleInputChange}
-                required
-            />
-        </div>
-    );
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 flex justify-center pt-20 md:pt-28 lg:pt-20 lg:pb-20 px-4 md:px-8">
@@ -126,9 +59,48 @@ function Upload() {
                 </div>
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <InputGroup id="nombre" label="Nombre de Documento" placeholder="Informacion Tecnica Cliente xxxxx" />
-                        <InputGroup id="cliente" label="Cliente" placeholder="Cliente xxxx" />
-                        <InputGroup id="pais" label="Pais" placeholder="Uruguay, Combia, Argentina ...." />
+                        <div className="space-y-2">
+                            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
+                                Nombre de Documento
+                            </label>
+                            <input
+                                id="nombre"
+                                type="text"
+                                placeholder="Informacion Tecnica Cliente xxxxx"
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
+                                value={formData.nombre}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="cliente" className="block text-sm font-medium text-gray-700">
+                                Cliente
+                            </label>
+                            <input
+                                id="cliente"
+                                type="text"
+                                placeholder="Cliente xxxx"
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
+                                value={formData.cliente}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="pais" className="block text-sm font-medium text-gray-700">
+                                Pais
+                            </label>
+                            <input
+                                id="pais"
+                                type="text"
+                                placeholder="Cliente xxxx"
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
+                                value={formData.pais}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
                         <Select
                             id='verticales'
                             label='Vertical'
@@ -137,51 +109,121 @@ function Upload() {
                             placeholder='Seleccione una vertical'
                             options={verticalOptions}
                         />
-                        <InputGroup id="cuentas" label="Cuentas" placeholder="xxxx, xxxx, xxxx" />
-                        <InputGroup id="grupos" label="Grupos" placeholder="Grupo A, Grupo B, Grupo e" />
+                        <div className="space-y-2">
+                            <label htmlFor="cuentas" className="block text-sm font-medium text-gray-700">
+                                Cuentas
+                            </label>
+                            <input
+                                id="cuentas"
+                                type="text"
+                                placeholder="xx, xx, xx"
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
+                                value={formData.cuentas}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="grupos" className="block text-sm font-medium text-gray-700">
+                                Grupos
+                            </label>
+                            <input
+                                id="grupos"
+                                type="text"
+                                placeholder="Grupo xx, grupo xx, grupo  xx"
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
+                                value={formData.grupos}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <DynamicInputGroup
+                            label='Tareas Generales'
+                            type="text"
+                            placeholder="Ingrese una tarea"
+                            values={formData.tareas}
+                            onChange={(newValues) => {
+                                setFormData((prevData) => ({
+                                    ...prevData,
+                                    tareas: newValues,
+                                }));
+                            }}
+                        />
+                        <DynamicInputGroup
+                            label='Flujos de Trabajo'
+                            type="text"
+                            placeholder="Ingrese un flujo de trabajo"
+                            values={formData.flujoTrabajo}
+                            onChange={(newValues) => {
+                                setFormData((prevData) => ({
+                                    ...prevData,
+                                    flujoTrabajo: newValues,
+                                }));
+                            }}
+                        />
+                        <div className="space-y-2">
+                            <label htmlFor="condicion" className="block text-sm font-medium text-gray-700">
+                                ¿Condición?
+                            </label>
+                            <select
+                                id="condicion"
+                                value={formData.condicion}
+                                onChange={handleCondicionChange}
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
+                            >
+                                <option value="" disabled>
+                                    Seleccione una opción
+                                </option>
+                                {condicionOptions.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <DynamicInputGroup
+                            label='Configuraciones'
+                            type="text"
+                            placeholder="Ingrese una configuración"
+                            values={formData.configuraciones}
+                            onChange={(newValues) => {
+                                setFormData((prevData) => ({
+                                    ...prevData,
+                                    configuraciones: newValues,
+                                }));
+                            }}
+                        />
+                        <div className="space-y-2">
+                            <label htmlFor="integracion" className="block text-sm font-medium text-gray-700">
+                                Integración
+                            </label>
+                            <input
+                                id="integracion"
+                                type="text"
+                                placeholder="Integración con..."
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gdwNegro focus:border-gdwNegro sm:text-sm"
+                                value={formData.integracion}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className="w-full flex justify-center">
+                            <CustomFileInput
+                                label="Archivos (Ficha Técnica)"
+                                onChange={(e) => handleFileChange(e, 'archivos1')}
+                            />
+                            <CustomFileInput
+                                label="Archivos (Fichas Técnicas)"
+                                onChange={(e) => handleFileChange(e, 'archivos2')}
+                            />
+                        </div>
                     </div>
-
-                    <DynamicInputGroup
-                        label='Tareas Generales'
-                        type="text"
-                        placeholder="Ingrese una tarea"
-                        values={formData.tareas}
-                        onChange={(updatedValues) => setFormData(prevData => ({ ...prevData, tareas: updatedValues }))}
-                    />
-                    <DynamicInputGroup
-                        label='Flujo de Trabajo (Puntos Generales)'
-                        type="text"
-                        placeholder="Ingrese un punto"
-                        values={formData.flujoTrabajo}
-                        onChange={(updatedValues) => setFormData(prevData => ({ ...prevData, flujoTrabajo: updatedValues }))}
-                    />
-                    <Select
-                        id='condicion'
-                        label='Cuenta con desarrollo?'
-                        value={formData.condicion}
-                        onChange={handleCondicionChange}
-                        placeholder='Seleccione una opción'
-                        options={condicionOptions}
-                    />
-                    <DynamicInputGroup
-                        label={formData.condicion === 'si' ? 'Configuraciones de desarrollo' : 'Configuraciones Especiales'}
-                        type='text'
-                        placeholder={formData.condicion === 'si' ? 'Conf. de Desarrollo' : 'Conf. Especiales'}
-                        values={formData.configuraciones}
-                        onChange={(updatedValues) => setFormData(prevData => ({ ...prevData, configuraciones: updatedValues }))}
-                    />
-                    <InputGroup id="integracion" label="Integracion" type="text" placeholder="SAP, ZOHO, etc" />
-                    <div className='flex gap-4'>
-                        <CustomFileInput onChange={(e) => handleFileChange(e, 'archivos1')} />
-                        <CustomFileInput onChange={(e) => handleFileChange(e, 'archivos2')} />
-                    </div>
-
-                    <div className="mt-6 flex justify-center">
+                    <div className="w-full flex justify-center">
                         <button
                             type="submit"
-                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gdwNegro duration-200 hover:px-6 hover:duration-200"
+                            className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gdwNegro hover:bg-gdwNegro focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gdwNegro"
                         >
-                            Enviar Formulario
+                            Subir Documento
                         </button>
                     </div>
                 </form>
