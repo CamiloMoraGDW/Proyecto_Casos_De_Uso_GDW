@@ -56,7 +56,7 @@ const DynamicInputGroup = ({ label, type = "text", placeholder, values, onChange
                 <button
                     type="button"
                     onClick={handleAddInput}
-                    className="mt-2 px-3 py-1 bg-gdwNegro text-white rounded-md hover:bg-blue-700"
+                    className="mt-2 px-3 py-1 duration-200 bg-gdwNegro text-white rounded-md hover:bg-gray-500 hover:duration-200"
                 >
                     Agregar {label}
                 </button>
