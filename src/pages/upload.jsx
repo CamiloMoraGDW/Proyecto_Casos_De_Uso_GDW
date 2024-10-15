@@ -10,7 +10,15 @@ import pdfToText from 'react-pdftotext';
 function Upload() {
     const verticalOptions = [
         { value: 'service', label: 'Service' },
-        { value: 'trade', label: 'Trade' }, // Cambié el valor aquí para que sea único
+        { value: 'trade', label: 'Trade' },
+        { value: 'fleet', label: 'Fleet' },
+        { value: 'gobierno', label: 'Gobierno' },
+        { value: 'inspentions', label: 'Inspections' },
+        { value: 'logistics', label: 'Logistics' },
+        { value: 'sales', label: 'Sales' },
+        { value: 'salesytrade', label: 'Sales y Trade' },
+        { value: 'salesytrade', label: 'Service/Fleet' },
+        { value: 'workflow', label: 'Workflow' },
     ];
 
     const condicionOptions = [
@@ -39,7 +47,6 @@ function Upload() {
     const [error, setError] = useState('');
 
     const pdfInputRef = useRef(null);
-
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setFormData((prevData) => ({
