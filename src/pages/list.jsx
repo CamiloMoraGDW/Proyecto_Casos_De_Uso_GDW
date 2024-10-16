@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { firestore } from '../../credenciales_firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import Select from '../components/select'; // Asumiendo que ya tienes este componente para selects
 
-function SearchPage() {
+function List() {
     const [docs, setDocs] = useState([]);          // Almacenamos los documentos de Firestore
     const [filteredDocs, setFilteredDocs] = useState([]);  // Almacenamos los documentos filtrados
     const [searchTerm, setSearchTerm] = useState('');  // Término de búsqueda
     const [selectedVertical, setSelectedVertical] = useState(''); // Filtro de vertical
     const [selectedCondicion, setSelectedCondicion] = useState(''); // Filtro de condición
+    const [selectedCliente, setSelectedCliente] = useState(''); // Filtro de cliente
+    const [selectedPais, setSelectedPais] = useState(''); // Filtro de país
+    const [selectedIntegracion, setSelectedIntegracion] = useState(''); // Filtro de integración
     const [loading, setLoading] = useState(true);
-
-    const verticalOptions = [
-        { value: '', label: 'Todos' },
-        { value: 'service', label: 'Service' },
-        { value: 'trade', label: 'Trade' },
-    ];
-
-    const condicionOptions = [
-        { value: '', label: 'Todos' },
-        { value: 'si', label: 'SI' },
-        { value: 'no', label: 'NO' },
-    ];
 
     // useEffect para cargar los documentos al montar el componente
     useEffect(() => {
@@ -40,42 +31,76 @@ function SearchPage() {
         fetchDocs();
     }, []);
 
-    // Función para manejar el término de búsqueda
-    const handleSearch = (e) => {
-        const term = e.target.value.toLowerCase();
-        setSearchTerm(term);
-        filterDocs(term, selectedVertical, selectedCondicion);
+    // Obtener opciones únicas dinámicas de los campos de los documentos
+    const uniqueOptions = (field) => {
+        const options = Array.from(new Set(docs.map((doc) => doc[field])));
+        return [{ value: '', label: 'Todos' }, ...options.map((value) => ({ value, label: value }))];
     };
 
-    // Función para manejar los filtros de vertical y condición
+    const clientesOptions = uniqueOptions('cliente');
+    const paisesOptions = uniqueOptions('pais');
+    const verticalOptions = uniqueOptions('vertical');
+    const condicionOptions = uniqueOptions('condicion');
+    const integracionOptions = uniqueOptions('integracion');
+
+    // Función para manejar el término de búsqueda
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value.toLowerCase());
+    };
+
+    // Función para manejar los filtros de cada campo
     const handleFilterChange = (id, value) => {
-        if (id === 'vertical') {
-            setSelectedVertical(value);
-            filterDocs(searchTerm, value, selectedCondicion);
-        } else if (id === 'condicion') {
-            setSelectedCondicion(value);
-            filterDocs(searchTerm, selectedVertical, value);
+        switch (id) {
+            case 'vertical':
+                setSelectedVertical(value);
+                break;
+            case 'condicion':
+                setSelectedCondicion(value);
+                break;
+            case 'cliente':
+                setSelectedCliente(value);
+                break;
+            case 'pais':
+                setSelectedPais(value);
+                break;
+            case 'integracion':
+                setSelectedIntegracion(value);
+                break;
+            default:
+                break;
         }
     };
 
     // Función para filtrar los documentos
-    const filterDocs = (term, vertical, condicion) => {
+    const filterDocs = () => {
         let filtered = docs;
 
-        if (term) {
+        if (searchTerm) {
             filtered = filtered.filter((doc) =>
-                doc.nombre.toLowerCase().includes(term) ||
-                doc.cliente.toLowerCase().includes(term) ||
-                doc.pais.toLowerCase().includes(term)
+                doc.nombre.toLowerCase().includes(searchTerm) ||
+                doc.cliente.toLowerCase().includes(searchTerm) ||
+                doc.pais.toLowerCase().includes(searchTerm)
             );
         }
 
-        if (vertical) {
-            filtered = filtered.filter((doc) => doc.vertical === vertical);
+        if (selectedVertical) {
+            filtered = filtered.filter((doc) => doc.vertical === selectedVertical);
         }
 
-        if (condicion) {
-            filtered = filtered.filter((doc) => doc.condicion === condicion);
+        if (selectedCondicion) {
+            filtered = filtered.filter((doc) => doc.condicion === selectedCondicion);
+        }
+
+        if (selectedCliente) {
+            filtered = filtered.filter((doc) => doc.cliente === selectedCliente);
+        }
+
+        if (selectedPais) {
+            filtered = filtered.filter((doc) => doc.pais === selectedPais);
+        }
+
+        if (selectedIntegracion) {
+            filtered = filtered.filter((doc) => doc.integracion === selectedIntegracion);
         }
 
         setFilteredDocs(filtered);
@@ -98,55 +123,84 @@ function SearchPage() {
                 </div>
 
                 {/* Filtros */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Select
                         id="vertical"
                         label="Vertical"
-                        value={selectedVertical} ee
+                        value={selectedVertical}
                         onChange={(value) => handleFilterChange('vertical', value)}
                         options={verticalOptions}
                     />
-                    <SelectdSSSSA
+                    <Select
                         id="condicion"
                         label="Condición"
                         value={selectedCondicion}
                         onChange={(value) => handleFilterChange('condicion', value)}
                         options={condicionOptions}
                     />
+                    <Select
+                        id="cliente"
+                        label="Cliente"
+                        value={selectedCliente}
+                        onChange={(value) => handleFilterChange('cliente', value)}
+                        options={clientesOptions}
+                    />
+                    <Select
+                        id="pais"
+                        label="País"
+                        value={selectedPais}
+                        onChange={(value) => handleFilterChange('pais', value)}
+                        options={paisesOptions}
+                    />
+                    <Select
+                        id="integracion"
+                        label="Integración"
+                        value={selectedIntegracion}
+                        onChange={(value) => handleFilterChange('integracion', value)}
+                        options={integracionOptions}
+                    />
+                </div>
+
+                {/* Botón de búsqueda */}
+                <div className="flex justify-end">
+                    <button
+                        onClick={filterDocs}
+                        className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+                    >
+                        Buscar
+                    </button>
                 </div>
 
                 {/* Mostrar resultados */}
                 {loading ? (
                     <p className="text-center">Cargando documentos...</p>
                 ) : filteredDocs.length > 0 ? (
-                    <div className="mx-auto w-72 h-60 bg-indigo-300 cursor-pointer hover:bg-gradient-to-t from-indigo-300 via-indigo-400 to-indigo-500 transition-all duration-300 ease-in-out flex justify-center items-center                                                                                                                                 ">
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {filteredDocs.map((doc) => (
-                                <div key={doc.id} className="p-4 bg-gray-50 border rounded-md">
-                                    <h3 className="text-xl font-bold">{doc.nombre}</h3>
-                                    <p><strong>Cliente:</strong> {doc.cliente}</p>
-                                    <p><strong>País:</strong> {doc.pais}</p>
-                                    <p><strong>Vertical:</strong> {doc.vertical}</p>
-                                    <p><strong>Condición:</strong> {doc.condicion}</p>
-                                    <a
-                                        href={doc.pdfUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        Ver PDF
-                                    </a>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {filteredDocs.map((doc) => (
+                            <div key={doc.id} className="p-4 bg-gray-50 border rounded-md">
+                                <h3 className="text-xl font-bold">{doc.nombre}</h3>
+                                <p><strong>Cliente:</strong> {doc.cliente}</p>
+                                <p><strong>País:</strong> {doc.pais}</p>
+                                <p><strong>Vertical:</strong> {doc.vertical}</p>
+                                <p><strong>Condición:</strong> {doc.condicion}</p>
+                                <p><strong>Integración:</strong> {doc.integracion}</p>
+                                <a
+                                    href={doc.pdfUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:underline"
+                                >
+                                    Ver documento
+                                </a>
+                            </div>
+                        ))}
                     </div>
                 ) : (
-                    <p className="text-center text-gray-500">No se encontraron documentos.</p>
+                    <p className="text-center">No se encontraron documentos con esos filtros.</p>
                 )}
             </div>
         </div>
     );
 }
 
-export default SearchPage;
+export default List;
