@@ -41,6 +41,10 @@ function App() {
         setRole(null);
       }
       setLoading(false);
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     });
 
     return () => unsubscribe();

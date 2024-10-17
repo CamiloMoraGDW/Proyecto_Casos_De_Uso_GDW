@@ -9,7 +9,7 @@ import pdfToText from 'react-pdftotext';
 
 function Upload() {
     const verticalOptions = [
-        { value: 'service', label: 'Service' },
+        { value: 'Service', label: 'Service' },
         { value: 'trade', label: 'Trade' },
         { value: 'fleet', label: 'Fleet' },
         { value: 'gobierno', label: 'Gobierno' },
@@ -35,18 +35,21 @@ function Upload() {
         grupos: '',
         tareas: [''],
         flujoTrabajo: [''],
-        condicion: '',
+        customizacion: '',
         configuraciones: [''],
         desarrollos: [''],
         integracion: '',
         archivoPdf: null,
         pdfText: '',
+        archivoVideo: null, // Nuevo campo para video
     });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const pdfInputRef = useRef(null);
+    const videoInputRef = useRef(null); // Referencia para el input de video
+
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setFormData((prevData) => ({
@@ -82,12 +85,20 @@ function Upload() {
             });
     };
 
+    const handleVideoChange = (e) => {
+        const file = e.target.files[0];
+        setFormData((prevData) => ({
+            ...prevData,
+            archivoVideo: file, // Almacenamos el video seleccionado
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
 
-        const { archivoPdf } = formData;
+        const { archivoPdf, archivoVideo } = formData;
 
         if (!archivoPdf) {
             setError('Por favor, sube un archivo PDF');
@@ -101,14 +112,24 @@ function Upload() {
             await uploadBytes(storageReferencePdf, archivoPdf);
             const pdfUrl = await getDownloadURL(storageReferencePdf);
 
+            let videoUrl = '';
+            if (archivoVideo) {
+                // Subida del archivo de video a Firebase Storage
+                const storageReferenceVideo = storageRef(storage, `videosFichaTecnica/${archivoVideo.name}`);
+                await uploadBytes(storageReferenceVideo, archivoVideo);
+                videoUrl = await getDownloadURL(storageReferenceVideo);
+            }
+
             // Preparar el objeto para Firestore
             const docData = {
                 ...formData,
-                pdfUrl, // Guardar la URL del archivo subido en Firestore
+                pdfUrl, // Guardar la URL del archivo PDF subido
+                videoUrl, // Guardar la URL del video subido si existe
             };
 
-            // Eliminar la propiedad archivoPdf antes de guardar en Firestore
+            // Eliminar la propiedad archivoPdf y archivoVideo antes de guardar en Firestore
             delete docData.archivoPdf;
+            delete docData.archivoVideo;
 
             // Guardar los datos en Firestore
             const docRef = await addDoc(collection(firestore, 'DocsTecnicos'), docData);
@@ -124,27 +145,30 @@ function Upload() {
                 grupos: '',
                 tareas: [''],
                 flujoTrabajo: [''],
-                condicion: '',
+                customizacion: '',
                 configuraciones: [''],
                 desarrollos: [''],
                 integracion: '',
                 archivoPdf: null,
                 pdfText: '',
+                archivoVideo: null, // Resetear el archivo de video
             });
 
             if (pdfInputRef.current) {
                 pdfInputRef.current.value = null;
             }
+            if (videoInputRef.current) {
+                videoInputRef.current.value = null;
+            }
 
             console.log('Documento añadido con ID:', docRef.id);
         } catch (error) {
-            console.error('Error subiendo el PDF a Firebase Storage o guardando en Firestore:', error);
+            console.error('Error subiendo el PDF o el video a Firebase Storage o guardando en Firestore:', error);
             setError('Hubo un error subiendo el archivo o guardando los datos.');
         } finally {
             setLoading(false);
         }
     };
-
 
     return (
         <div className="min-h-screen bg-gray-100 flex justify-center pt-20 md:pt-28 lg:pt-20 lg:pb-20 px-4 md:px-8">
@@ -272,11 +296,11 @@ function Upload() {
                             }}
                         />
 
-                        {/* Condición */}
+                        {/* Customizacion? */}
                         <Select
-                            id="condicion"
-                            label="Desarrollo?"
-                            value={formData.condicion}
+                            id="customizacion"
+                            label="Customizacion?"
+                            value={formData.customizacion}
                             onChange={(value) => handleSelectChange(value, 'condicion')}
                             placeholder="Seleccione una condición"
                             options={condicionOptions}
@@ -326,10 +350,24 @@ function Upload() {
                             />
                         </div>
 
+                        {/* Subida de archivo Video */}
+                        <div className="space-y-2">
+                            <label htmlFor="archivoVideo" className="block text-sm font-medium text-gray-700">
+                                Video Técnico
+                            </label>
+                            <input
+                                id="archivoVideo"
+                                type="file"
+                                ref={videoInputRef}
+                                accept="video/*"
+                                onChange={handleVideoChange}
+                                className="mt-1 block w-full text-sm text-gray-700 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold hover:file:bg-gray-100"
+                            />
+                        </div>
                         {/* Subida de archivo PDF */}
                         <div className="space-y-2">
                             <label htmlFor="archivoPdf" className="block text-sm font-medium text-gray-700">
-                                Ficha Tecnica
+                                Ficha Tecnica (PDF)
                             </label>
                             <input
                                 id="archivoPdf"
@@ -347,7 +385,7 @@ function Upload() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-fulls mt-4 py-2 px-4 bg-gdwNegro text-white font-semibold rounded-md shadow hover:bg-gdwNegro disabled:bg-gray-400"
+                        className="w-full mt-4 py-2 px-4 bg-gdwNegro text-white font-semibold rounded-md shadow hover:bg-gdwNegro disabled:bg-gray-400"
                     >
                         {loading ? 'Subiendo...' : 'Guardar Documento'}
                     </button>
