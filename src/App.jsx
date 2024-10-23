@@ -14,6 +14,7 @@ import Login from './pages/login';
 import Upload from './pages/upload';
 import Profile from './pages/profile';
 import Home from './pages/home';
+import Register from './pages/register';
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
@@ -82,6 +83,7 @@ function App() {
       ) : (
         <Routes>
           <Route path="*" element={<Login />} />
+          <Route path='/register' element={<Register />} />
         </Routes>
       )}
     </>
