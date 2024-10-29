@@ -148,8 +148,11 @@ export default function Login() {
                                         }
                                     </div>
                                 </div>
+                                <div className="w-full mt-2 flex justify-cente items-center">
+                                    <span className="text-sm">No tienes una cuenta?<span onClick={() => navigate("/register")} className="text-gdwAzul hover:cursor-pointer"> Registrate.</span></span>
+                                </div>
                                 {error && <div className="text-rose-700">{error}</div>}
-                                <div className="w-full flex justify-center mt-5">
+                                <div className="w-full flex justify-center mt-4">
                                     <button notype="submit" className="bg-black text-white rounded-lg py-2 px-3 duration-300 hover:px-5 hover:duration-300" onClick={() => navigate("/")}>
                                         Iniciar sesión
                                     </button>
