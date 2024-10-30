@@ -82,9 +82,9 @@ export default function Login() {
 
     return (
         <>
-            <div className="flex min-h-screen animate-blurred-fade-in duration-100">
+            <div className="flex min-h-screen">
                 {/* Columna izquierda */}
-                <div className="w-1/2 max-[700px]:hidden flex-col items-center justify-center bg-gdwNegro p-12 lg:flex lg:items-center">
+                <div className="w-1/2 max-[700px]:hidden flex-col items-center justify-center bg-gdwNegro p-12 lg:flex lg:items-center animate-slide-in-left duration-200">
                     <div className="mb-8 w-full flex justify-center" >
                         <img
                             src={LogoNegro}
@@ -100,8 +100,8 @@ export default function Login() {
                 </div>
 
                 {/* Columna derecha */}
-                <div className="flex w-full items-center justify-center lg:w-1/2">
-                    <div className="w-full max-w-md p-8">
+                <div className="flex w-full items-center justify-center lg:w-1/2 ">
+                    <div className="w-full max-w-md p-8 animate-slide-in-right duration-200">
                         <div className="text-start">
                             <h2 className="text-[28px] font-bold text-gray-900">Inicia sesión con tu cuenta</h2>
                         </div>
