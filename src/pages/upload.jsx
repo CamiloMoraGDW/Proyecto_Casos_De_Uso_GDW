@@ -6,6 +6,7 @@ import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage
 import DynamicInputGroup from '../components/inputWadding'; // Cambia según tu componente real
 import Select from '../components/select';
 import pdfToText from 'react-pdftotext';
+import Header from '../components/header';
 
 function Upload() {
     const verticalOptions = [
@@ -171,227 +172,230 @@ function Upload() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex justify-center pt-20 md:pt-28 lg:pt-20 lg:pb-20 px-4 md:px-8">
-            <div className="bg-white shadow-2xl rounded-lg w-full max-w-4xl">
-                <div className="p-6 border-b border-gray-200">
-                    <h2 className="text-2xl font-bold text-center text-gray-800">Nuevo Documento</h2>
-                </div>
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Nombre */}
-                        <div className="space-y-2">
-                            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
-                                Nombre de Documento
-                            </label>
-                            <input
-                                id="nombre"
-                                type="text"
-                                placeholder="Información Técnica Cliente xxxxx"
-                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                value={formData.nombre}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        {/* Cliente */}
-                        <div className="space-y-2">
-                            <label htmlFor="cliente" className="block text-sm font-medium text-gray-700">
-                                Cliente
-                            </label>
-                            <input
-                                id="cliente"
-                                type="text"
-                                placeholder="Cliente xxxx"
-                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                value={formData.cliente}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        {/* País */}
-                        <div className="space-y-2">
-                            <label htmlFor="pais" className="block text-sm font-medium text-gray-700">
-                                País
-                            </label>
-                            <input
-                                id="pais"
-                                type="text"
-                                placeholder="País"
-                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                value={formData.pais}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        {/* Vertical */}
-                        <Select
-                            id="vertical"
-                            label="Vertical"
-                            value={formData.vertical}
-                            onChange={(value) => handleSelectChange(value, 'vertical')}
-                            placeholder="Seleccione una vertical"
-                            options={verticalOptions}
-                        />
-
-                        {/* Cuentas */}
-                        <div className="space-y-2">
-                            <label htmlFor="cuentas" className="block text-sm font-medium text-gray-700">
-                                Cuentas
-                            </label>
-                            <input
-                                id="cuentas"
-                                type="text"
-                                placeholder="xx, xx, xx"
-                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                value={formData.cuentas}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        {/* Grupos */}
-                        <div className="space-y-2">
-                            <label htmlFor="grupos" className="block text-sm font-medium text-gray-700">
-                                Grupos
-                            </label>
-                            <input
-                                id="grupos"
-                                type="text"
-                                placeholder="Grupo xx, grupo xx"
-                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                value={formData.grupos}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        {/* Tareas */}
-                        <DynamicInputGroup
-                            label="Tareas Generales"
-                            type="text"
-                            placeholder="Ingrese una tarea"
-                            values={formData.tareas}
-                            onChange={(newValues) => {
-                                setFormData((prevData) => ({
-                                    ...prevData,
-                                    tareas: newValues,
-                                }));
-                            }}
-                        />
-
-                        {/* Flujo de Trabajo */}
-                        <DynamicInputGroup
-                            label="Flujo de Trabajo"
-                            type="text"
-                            placeholder="Ingrese un flujo de trabajo"
-                            values={formData.flujoTrabajo}
-                            onChange={(newValues) => {
-                                setFormData((prevData) => ({
-                                    ...prevData,
-                                    flujoTrabajo: newValues,
-                                }));
-                            }}
-                        />
-
-                        {/* Customizacion? */}
-                        <Select
-                            id="customizacion"
-                            label="Customizacion?"
-                            value={formData.customizacion}
-                            onChange={(value) => handleSelectChange(value, 'condicion')}
-                            placeholder="Seleccione una condición"
-                            options={condicionOptions}
-                        />
-
-                        {formData.condicion === 'si' ? (
-                            <DynamicInputGroup
-                                label="Desarrollos"
-                                type="text"
-                                placeholder="Ingrese un desarrollo"
-                                values={formData.desarrollos}
-                                onChange={(newValues) => {
-                                    setFormData((prevData) => ({
-                                        ...prevData,
-                                        desarrollos: newValues,
-                                    }));
-                                }}
-                            />
-                        ) : formData.condicion === 'no' ? (
-                            <DynamicInputGroup
-                                label="Configuraciones Especiales"
-                                type="text"
-                                placeholder="Ingrese una configuración"
-                                values={formData.configuraciones}
-                                onChange={(newValues) => {
-                                    setFormData((prevData) => ({
-                                        ...prevData,
-                                        configuraciones: newValues,
-                                    }));
-                                }}
-                            />
-                        ) : null}
-
-                        {/* Integración */}
-                        <div className="space-y-2">
-                            <label htmlFor="integracion" className="block text-sm font-medium text-gray-700">
-                                Integración
-                            </label>
-                            <input
-                                id="integracion"
-                                type="text"
-                                placeholder="Detalles de integración"
-                                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
-                                value={formData.integracion}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        {/* Subida de archivo Video */}
-                        <div className="space-y-2">
-                            <label htmlFor="archivoVideo" className="block text-sm font-medium text-gray-700">
-                                Video Técnico
-                            </label>
-                            <input
-                                id="archivoVideo"
-                                type="file"
-                                ref={videoInputRef}
-                                accept="video/*"
-                                onChange={handleVideoChange}
-                                className="mt-1 block w-full text-sm text-gray-700 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold hover:file:bg-gray-100"
-                            />
-                        </div>
-                        {/* Subida de archivo PDF */}
-                        <div className="space-y-2">
-                            <label htmlFor="archivoPdf" className="block text-sm font-medium text-gray-700">
-                                Ficha Tecnica (PDF)
-                            </label>
-                            <input
-                                id="archivoPdf"
-                                type="file"
-                                ref={pdfInputRef}
-                                accept=".pdf"
-                                onChange={handleFileChange}
-                                className="mt-1 block w-full text-sm text-gray-700 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold hover:file:bg-gray-100"
-                            />
-                        </div>
+        <>
+            <Header />
+            <div className="min-h-screen bg-gray-100 flex justify-center pt-20 md:pt-28 lg:pt-20 lg:pb-20 px-4 md:px-8">
+                <div className="bg-white shadow-2xl rounded-lg w-full max-w-4xl">
+                    <div className="p-6 border-b border-gray-200">
+                        <h2 className="text-2xl font-bold text-center text-gray-800">Nuevo Documento</h2>
                     </div>
+                    <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Nombre */}
+                            <div className="space-y-2">
+                                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
+                                    Nombre de Documento
+                                </label>
+                                <input
+                                    id="nombre"
+                                    type="text"
+                                    placeholder="Información Técnica Cliente xxxxx"
+                                    className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                                    value={formData.nombre}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
 
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                            {/* Cliente */}
+                            <div className="space-y-2">
+                                <label htmlFor="cliente" className="block text-sm font-medium text-gray-700">
+                                    Cliente
+                                </label>
+                                <input
+                                    id="cliente"
+                                    type="text"
+                                    placeholder="Cliente xxxx"
+                                    className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                                    value={formData.cliente}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full mt-4 py-2 px-4 bg-gdwNegro text-white font-semibold rounded-md shadow hover:bg-gdwNegro disabled:bg-gray-400"
-                    >
-                        {loading ? 'Subiendo...' : 'Guardar Documento'}
-                    </button>
-                </form>
+                            {/* País */}
+                            <div className="space-y-2">
+                                <label htmlFor="pais" className="block text-sm font-medium text-gray-700">
+                                    País
+                                </label>
+                                <input
+                                    id="pais"
+                                    type="text"
+                                    placeholder="País"
+                                    className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                                    value={formData.pais}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            {/* Vertical */}
+                            <Select
+                                id="vertical"
+                                label="Vertical"
+                                value={formData.vertical}
+                                onChange={(value) => handleSelectChange(value, 'vertical')}
+                                placeholder="Seleccione una vertical"
+                                options={verticalOptions}
+                            />
+
+                            {/* Cuentas */}
+                            <div className="space-y-2">
+                                <label htmlFor="cuentas" className="block text-sm font-medium text-gray-700">
+                                    Cuentas
+                                </label>
+                                <input
+                                    id="cuentas"
+                                    type="text"
+                                    placeholder="xx, xx, xx"
+                                    className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                                    value={formData.cuentas}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            {/* Grupos */}
+                            <div className="space-y-2">
+                                <label htmlFor="grupos" className="block text-sm font-medium text-gray-700">
+                                    Grupos
+                                </label>
+                                <input
+                                    id="grupos"
+                                    type="text"
+                                    placeholder="Grupo xx, grupo xx"
+                                    className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                                    value={formData.grupos}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            {/* Tareas */}
+                            <DynamicInputGroup
+                                label="Tareas Generales"
+                                type="text"
+                                placeholder="Ingrese una tarea"
+                                values={formData.tareas}
+                                onChange={(newValues) => {
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        tareas: newValues,
+                                    }));
+                                }}
+                            />
+
+                            {/* Flujo de Trabajo */}
+                            <DynamicInputGroup
+                                label="Flujo de Trabajo"
+                                type="text"
+                                placeholder="Ingrese un flujo de trabajo"
+                                values={formData.flujoTrabajo}
+                                onChange={(newValues) => {
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        flujoTrabajo: newValues,
+                                    }));
+                                }}
+                            />
+
+                            {/* Customizacion? */}
+                            <Select
+                                id="customizacion"
+                                label="Customizacion?"
+                                value={formData.customizacion}
+                                onChange={(value) => handleSelectChange(value, 'condicion')}
+                                placeholder="Seleccione una condición"
+                                options={condicionOptions}
+                            />
+
+                            {formData.condicion === 'si' ? (
+                                <DynamicInputGroup
+                                    label="Desarrollos"
+                                    type="text"
+                                    placeholder="Ingrese un desarrollo"
+                                    values={formData.desarrollos}
+                                    onChange={(newValues) => {
+                                        setFormData((prevData) => ({
+                                            ...prevData,
+                                            desarrollos: newValues,
+                                        }));
+                                    }}
+                                />
+                            ) : formData.condicion === 'no' ? (
+                                <DynamicInputGroup
+                                    label="Configuraciones Especiales"
+                                    type="text"
+                                    placeholder="Ingrese una configuración"
+                                    values={formData.configuraciones}
+                                    onChange={(newValues) => {
+                                        setFormData((prevData) => ({
+                                            ...prevData,
+                                            configuraciones: newValues,
+                                        }));
+                                    }}
+                                />
+                            ) : null}
+
+                            {/* Integración */}
+                            <div className="space-y-2">
+                                <label htmlFor="integracion" className="block text-sm font-medium text-gray-700">
+                                    Integración
+                                </label>
+                                <input
+                                    id="integracion"
+                                    type="text"
+                                    placeholder="Detalles de integración"
+                                    className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none"
+                                    value={formData.integracion}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            {/* Subida de archivo Video */}
+                            <div className="space-y-2">
+                                <label htmlFor="archivoVideo" className="block text-sm font-medium text-gray-700">
+                                    Video Técnico
+                                </label>
+                                <input
+                                    id="archivoVideo"
+                                    type="file"
+                                    ref={videoInputRef}
+                                    accept="video/*"
+                                    onChange={handleVideoChange}
+                                    className="mt-1 block w-full text-sm text-gray-700 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold hover:file:bg-gray-100"
+                                />
+                            </div>
+                            {/* Subida de archivo PDF */}
+                            <div className="space-y-2">
+                                <label htmlFor="archivoPdf" className="block text-sm font-medium text-gray-700">
+                                    Ficha Tecnica (PDF)
+                                </label>
+                                <input
+                                    id="archivoPdf"
+                                    type="file"
+                                    ref={pdfInputRef}
+                                    accept=".pdf"
+                                    onChange={handleFileChange}
+                                    className="mt-1 block w-full text-sm text-gray-700 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold hover:file:bg-gray-100"
+                                />
+                            </div>
+                        </div>
+
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full mt-4 py-2 px-4 bg-gdwNegro text-white font-semibold rounded-md shadow hover:bg-gdwNegro disabled:bg-gray-400"
+                        >
+                            {loading ? 'Subiendo...' : 'Guardar Documento'}
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

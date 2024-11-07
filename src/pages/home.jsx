@@ -2,6 +2,7 @@ import React from "react"
 import Logo from '../assets/LogoGdwNegro.png'
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 import { FaExchangeAlt } from "react-icons/fa";
+import Header from "../components/header";
 
 
 
@@ -9,6 +10,7 @@ import { FaExchangeAlt } from "react-icons/fa";
 function Home() {
     return (
         <>
+            <Header />
             <div className="min-h-screen bg-slate-200 to-white flex flex-col items-center justify-center p-4 animate-blurred-fade-in duration-100">
                 <div className="max-w-4xl w-full space-y-8">
                     {/* Logo de la empresa */}

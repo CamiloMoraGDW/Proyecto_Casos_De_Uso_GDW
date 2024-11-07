@@ -65,23 +65,6 @@ function Register() {
 
     return (
         <div className="flex min-h-screen">
-            {/* Columna Izquierda */}
-            <div className="w-2/3 max-[700px]:hidden flex-col items-center justify-center bg-gdwNegro p-12 lg:flex lg:items-center animate-slide-in-left">
-                <div className="mb-8 w-full flex justify-start">
-                    <img
-                        src={LogoNegro}
-                        alt="Logo de la empresa"
-                        width={200}
-                        height={75}
-                    />
-                </div>
-                <h1 className="w-full mb-4 text-3xl font-bold text-white text-start">
-                    Bienvenid@ al Portal de Información Técnica y de Uso Cliente
-                </h1>
-                <p className="text-base text-white text-start">
-                    Esta es una solución destinada a consolidar información acerca del trabajo de cada cliente utilizando la aplicación de Godoworks...
-                </p>
-            </div>
 
             {/* Columna Derecha */}
             <div className="flex w-full items-center justify-center lg:w-1/2">
@@ -222,6 +205,23 @@ function Register() {
                         </div>
                     </form>
                 </div>
+            </div>
+            {/* Columna Izquierda */}
+            <div className="w-1/2 max-[700px]:hidden flex-col items-center justify-center bg-gdwNegro p-12 lg:flex lg:items-center animate-slide-in-left">
+                <div className="mb-8 w-full flex justify-start">
+                    <img
+                        src={LogoNegro}
+                        alt="Logo de la empresa"
+                        width={200}
+                        height={75}
+                    />
+                </div>
+                <h1 className="w-full mb-4 text-3xl font-bold text-white text-start">
+                    Bienvenid@ al Portal de Información Técnica y de Uso Cliente
+                </h1>
+                <p className="text-base text-white text-start">
+                    Esta es una solución destinada a consolidar información acerca del trabajo de cada cliente utilizando la aplicación de Godoworks...
+                </p>
             </div>
         </div>
     );

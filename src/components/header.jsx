@@ -68,7 +68,7 @@ export default function Header() {
 
                     <span onClick={() => navigate("/profile")} className="hover:cursor-pointer">
                         {profilePicURL ? (
-                            <img src={profilePicURL} alt="Perfil" className="profile-picture" />
+                            <img src={profilePicURL} alt="Perfil" className="w-8 rounded-full" />
                         ) : (
                             <FaRegCircleUser className="w-8 h-8" />
                         )}

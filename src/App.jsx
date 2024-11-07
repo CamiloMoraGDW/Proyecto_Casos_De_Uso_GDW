@@ -61,7 +61,6 @@ function App() {
       {usuarioGlobal ? (
         <>
           <div className="app-container animate-blurred-fade-in duration-100">
-            <Header />
             <div className="main-content" data-aos="zoom-in">
               <Routes>
                 <Route path="/" element={<Home />} />
