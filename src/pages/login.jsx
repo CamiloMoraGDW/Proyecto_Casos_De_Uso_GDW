@@ -137,12 +137,12 @@ export default function Login() {
                                         {shown ?
                                             <>
                                                 <div className=" h-full flex justify-center items-center">
-                                                    <FaEyeSlash className="text-3xl text-zinc-700 animate-zoom-in animate-duration-250" />
+                                                    <FaEyeSlash className="text-3xl text-zinc-700 animate-blurred-fade-in animate-duration-400" />
                                                 </div>
                                             </>
                                             :
                                             <div className="h-full flex justify-center items-center">
-                                                <FaEye className="text-3xl text-zinc-700 animate-zoom-in animate-duration-250" />
+                                                <FaEye className="text-3xl text-zinc-700 animate-blurred-fade-in animate-duration-400" />
 
                                             </div>
                                         }
